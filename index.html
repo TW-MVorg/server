@@ -22,7 +22,6 @@
             align-items: center;
             position: relative;
             font-family: 'Arial Black', Gadget, sans-serif;
-            /* 調整主容器垂直位置，讓內容看起來更居中 */
             padding-bottom: 50px; 
         }
 
@@ -41,19 +40,19 @@
         /* --- 升級內容文字樣式 --- */
         .upgrade-info {
             z-index: 10;
-            font-size: 2.5em; /* 略小於主標題 */
+            font-size: 2.5em; 
             font-weight: 700;
             margin-bottom: 40px;
+            text-align: center; 
             
             /* 沿用主標題的流動漸層效果 */
             background: linear-gradient(
-                90deg, #00ffff, #00ff00, #ffff00, #ff00ff, #00ffff /* 使用較柔和的四色漸層 */
+                90deg, #00ffff, #00ff00, #ffff00, #ff00ff, #00ffff 
             );
             -webkit-background-clip: text; 
             background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 300% 100%; 
-            /* 讓這個漸層動畫速度較慢，與主標題區分 */
             animation: color-flow-slow 15s linear infinite; 
         }
 
@@ -183,7 +182,7 @@
 <body>
     
     <div class="upgrade-info">
-        i7-4770 → i5-14600
+        等待主機板 CPU 散熱器
     </div>
 
     <div class="top-content-container">
@@ -204,9 +203,10 @@
         const progressBar = document.getElementById('progressBar');
         const percentageText = document.getElementById('percentage-text');
         let progress = 0; 
+        const maxProgress = 80; // <<<--- 已設定最大進度為 80%
         
         function updateProgress() {
-            if (progress < 100) {
+            if (progress < maxProgress) {
                 progress += 1; 
                 
                 // 更新進度條的 CSS 寬度
@@ -215,10 +215,11 @@
                 // 更新百分比文字
                 percentageText.textContent = progress + '%';
                 
+                // 模擬載入速度
                 setTimeout(updateProgress, 50); 
             } else {
-                percentageText.textContent = '100% - 升級完成！';
-                // 可選：停止旋轉環的動畫 (需要進一步的 JavaScript 操作來控制 CSS 動畫暫停/播放)
+                // 進度達到 80% 時停止並顯示等待訊息
+                percentageText.textContent = maxProgress + '% - 等待零件中...'; 
             }
         }
 
