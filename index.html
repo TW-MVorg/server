@@ -43,7 +43,8 @@
             font-size: 2.5em; 
             font-weight: 700;
             margin-bottom: 40px;
-            text-align: center; 
+            text-align: center; /* 確保文字居中 */
+            line-height: 1.2; /* 讓行距更緊湊，避免佔用太多空間 */
             
             /* 沿用主標題的流動漸層效果 */
             background: linear-gradient(
@@ -64,8 +65,8 @@
         /* --- 主顯示區域容器 (三個元素都在這裡交替顯示) --- */
         .main-display-container {
             position: relative;
-            width: 400px; /* 根據文字和旋轉環的最大尺寸設定 */
-            height: 100px; /* 確保容器足夠高 */
+            width: 400px; 
+            height: 100px; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -76,8 +77,8 @@
         .switchable-element {
             position: absolute;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out; /* 增加切換的平滑度 */
-            display: flex; /* 用於讓文字和圓環在內部居中對齊 */
+            transition: opacity 0.3s ease-in-out; 
+            display: flex; 
             align-items: center;
             gap: 20px;
         }
@@ -205,7 +206,9 @@
 <body>
     
     <div class="upgrade-info">
-        等待主機板 tuf gaming z790-plus wifi d4 atx & CPU i5-14600 & 散熱器
+        等待主機板 tuf gaming z790-plus wifi d4 atx<br>
+        等待 CPU i5-14600<br>
+        等待 散熱器
     </div>
 
     <div class="main-display-container">
