@@ -61,28 +61,37 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* --- 頂部內容容器 (文字和旋轉環並排) --- */
-        .top-content-container {
+        /* --- 主顯示區域容器 (三個元素都在這裡交替顯示) --- */
+        .main-display-container {
+            position: relative;
+            width: 400px; /* 根據文字和旋轉環的最大尺寸設定 */
+            height: 100px; /* 確保容器足夠高 */
             display: flex;
-            align-items: center; 
-            gap: 20px; 
+            justify-content: center;
+            align-items: center;
             margin-bottom: 20px; 
         }
 
-        /* --- 清晰彩色主標題樣式 --- */
+        /* 將所有可切換的元素絕對定位，並預設隱藏 */
+        .switchable-element {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out; /* 增加切換的平滑度 */
+            display: flex; /* 用於讓文字和圓環在內部居中對齊 */
+            align-items: center;
+            gap: 20px;
+        }
+        
+        /* --- 1. 清晰彩色主標題樣式 --- */
         .upgrade-text {
-            z-index: 10;
             font-size: 5em;
             font-weight: 900;
-            
-            /* 主標題的流動漸層效果 */
             background: linear-gradient(
                 90deg, #f00, #ff7f00, #ff0, #0f0, #0ff, #00f, #8b00ff, #f00
             );
             -webkit-background-clip: text; 
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            
             background-size: 400% 100%; 
             animation: color-flow 10s linear infinite; 
         }
@@ -93,7 +102,7 @@
             100% { background-position: 400% 50%; }
         }
 
-        /* --- 旋轉環形樣式 --- */
+        /* --- 2. 旋轉環形樣式 --- */
         .spinner {
             width: 80px; 
             height: 80px; 
@@ -101,6 +110,194 @@
             border-top-color: #00ffff; 
             border-right-color: #ff00ff; 
             border-radius: 50%; 
+            
+            animation: 
+                spin 1.5s linear infinite, 
+                spinner-glow 1s ease-in-out infinite alternate; 
+        }
+
+        /* 旋轉動畫 Keyframes */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 旋轉環的光暈閃爍動畫 */
+        @keyframes spinner-glow {
+            0% { box-shadow: 0 0 10px #00ffff; }
+            100% { box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff; }
+        }
+        
+        /* --- 3. 百分比文字樣式 --- */
+        #percentage-text-switch {
+            font-size: 5em;
+            font-weight: 900;
+            color: #00ffff; 
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            /* 百分比文字也要套用流動漸層 */
+            background: linear-gradient(
+                90deg, #00ffff, #00ff00, #ffff00, #00ffff
+            );
+            -webkit-background-clip: text; 
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 400% 100%; 
+            animation: color-flow 8s linear infinite reverse; 
+        }
+
+        /* --- 進度條區域樣式 (獨立在下方) --- */
+        .progress-area {
+            width: 80vw;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; 
+        }
+        
+        /* 額外提示文字 (取代進度條上方的 % 數) */
+        #progress-area-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00ffff; 
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); 
+            margin-bottom: 5px;
+            align-self: flex-end; 
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.1); 
+            border-radius: 15px;
+            overflow: hidden; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%; 
+            border-radius: 15px;
+            
+            background: linear-gradient(
+                90deg, #00ffff, #00ff00, #ffff00, #ff00ff 
+            );
+            background-size: 200% 100%; 
+            
+            animation: 
+                progress-move 2s linear infinite, 
+                progress-glow 1.5s ease-in-out infinite alternate; 
+            
+            transition: width 0.1s linear; 
+        }
+
+        @keyframes progress-move {
+            0% { background-position: 200% 0; }
+            100% { background-position: 0% 0; }
+        }
+
+        @keyframes progress-glow {
+            0% { box-shadow: 0 0 10px #00ffff; }
+            100% { box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff; }
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="upgrade-info">
+        等待主機板 CPU 散熱器
+    </div>
+
+    <div class="main-display-container">
+        
+        <div id="textSwitch" class="switchable-element">
+            <div class="upgrade-text">正在升級</div>
+        </div>
+
+        <div id="spinnerSwitch" class="switchable-element">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="percentageSwitch" class="switchable-element">
+            <div id="percentage-text-switch">0%</div>
+        </div>
+    </div>
+
+    <div class="progress-area">
+        <div id="progress-area-text">正在處理...</div> 
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+    
+    <script>
+        const progressBar = document.getElementById('progressBar');
+        const progressAreaText = document.getElementById('progress-area-text');
+        
+        // 可切換的元素陣列
+        const switchElements = [
+            document.getElementById('textSwitch'),
+            document.getElementById('spinnerSwitch'),
+            document.getElementById('percentageSwitch')
+        ];
+        
+        const percentageSwitchText = document.getElementById('percentage-text-switch');
+        let currentElementIndex = 0;
+        let progress = 0; 
+        const maxProgress = 80; // 進度上限
+        const switchInterval = 1000; // 每個項目顯示 1 秒
+        
+        // --- 元素切換邏輯 ---
+        function switchDisplay() {
+            // 隱藏當前元素
+            switchElements[currentElementIndex].style.opacity = '0';
+            
+            // 計算下一個要顯示的元素索引
+            currentElementIndex = (currentElementIndex + 1) % switchElements.length;
+            
+            // 顯示下一個元素
+            switchElements[currentElementIndex].style.opacity = '1';
+
+            // 如果進度未完成，則繼續切換
+            if (progress < maxProgress) {
+                setTimeout(switchDisplay, switchInterval);
+            }
+        }
+        
+        // --- 進度條邏輯 ---
+        function updateProgress() {
+            if (progress < maxProgress) {
+                progress += 1; 
+                
+                // 更新進度條的 CSS 寬度
+                progressBar.style.width = progress + '%';
+                
+                // 更新切換顯示的百分比文字
+                percentageSwitchText.textContent = progress + '%';
+                
+                // 更新進度條上方的文字提示
+                progressAreaText.textContent = `進度條載入中... ${progress}%`;
+
+                // 模擬載入速度
+                setTimeout(updateProgress, 50); 
+            } else {
+                // 進度達到 80% 時停止
+                progressAreaText.textContent = `80% - 等待零件中...`;
+                
+                // 最終停止切換，只顯示「正在升級」文字
+                switchElements.forEach(el => el.style.opacity = '0');
+                document.getElementById('textSwitch').style.opacity = '1';
+            }
+        }
+
+        // 初始設置：先顯示第一個元素，並啟動進度條和切換
+        switchElements[0].style.opacity = '1';
+        updateProgress();
+        setTimeout(switchDisplay, switchInterval); // 延遲 1 秒後開始切換
+
+    </script>
+</body>
+</html>
             
             animation: 
                 spin 1.5s linear infinite, 
