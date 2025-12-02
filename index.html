@@ -22,6 +22,7 @@
             align-items: center;
             position: relative;
             font-family: 'Arial Black', Gadget, sans-serif;
+            /* 調整整體垂直位置 */
             padding-bottom: 50px; 
         }
 
@@ -37,16 +38,36 @@
             z-index: -1;
         }
 
+        /* --- 新增：最高級別標題樣式 (元界創想 伺服器) --- */
+        .main-title {
+            z-index: 10;
+            font-size: 7em; /* 非常大的標題 */
+            font-weight: 900;
+            margin-bottom: 10px; /* 與下方內容間隔 */
+            
+            /* 應用主標題的流動漸層效果 */
+            background: linear-gradient(
+                90deg, #f00, #ff7f00, #ff0, #0f0, #0ff, #00f, #8b00ff, #f00
+            );
+            -webkit-background-clip: text; 
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 400% 100%; 
+            animation: color-flow 10s linear infinite; 
+            /* 輕微的陰影讓它在背景上更突出，但不模糊 */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1); 
+        }
+
         /* --- 升級內容文字樣式 --- */
         .upgrade-info {
             z-index: 10;
             font-size: 2.5em; 
             font-weight: 700;
-            margin-bottom: 40px;
-            text-align: center; /* 確保文字居中 */
-            line-height: 1.2; /* 讓行距更緊湊，避免佔用太多空間 */
+            margin-bottom: 40px; /* 與下方切換區間隔 */
+            text-align: center; 
+            line-height: 1.2; 
             
-            /* 沿用主標題的流動漸層效果 */
+            /* 沿用副標題的流動漸層效果 */
             background: linear-gradient(
                 90deg, #00ffff, #00ff00, #ffff00, #ff00ff, #00ffff 
             );
@@ -83,7 +104,7 @@
             gap: 20px;
         }
         
-        /* --- 1. 清晰彩色主標題樣式 --- */
+        /* --- 1. 清晰彩色主標題樣式 (用於切換區的 '正在升級') --- */
         .upgrade-text {
             font-size: 5em;
             font-weight: 900;
@@ -97,7 +118,7 @@
             animation: color-flow 10s linear infinite; 
         }
 
-        /* 顏色流動的 Keyframes */
+        /* 顏色流動的 Keyframes (應用於所有需要快速流動效果的元素) */
         @keyframes color-flow {
             0% { background-position: 0% 50%; }
             100% { background-position: 400% 50%; }
@@ -204,6 +225,10 @@
     </style>
 </head>
 <body>
+    
+    <div class="main-title">
+        元界創想 伺服器
+    </div>
     
     <div class="upgrade-info">
         等待主機板 tuf gaming z790-plus wifi d4 atx<br>
