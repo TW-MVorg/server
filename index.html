@@ -3,326 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>元界創想-伺服器升級中</title>
+    <title>元界創想-已啟動</title>
     <style>
-        /* --- 圖片背景與佈局設置 --- */
         body {
-            /* 使用您提供的公開圖片 URL */
-            background-image: url('https://dlcdnwebimgs.asus.com/gain/88be6c4e-815d-4341-9c91-731d9dfabdb5/');
-            background-size: cover; 
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-attachment: fixed;
-            
+            /* 簡化背景 */
+            background-color: #1a1a1a; 
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
             height: 100vh;
-            margin: 0;
             display: flex;
             flex-direction: column; 
             justify-content: center;
             align-items: center;
-            position: relative;
-            font-family: 'Arial Black', Gadget, sans-serif;
-            /* 調整整體垂直位置 */
-            padding-bottom: 50px; 
+            margin: 0;
+            text-align: center;
         }
 
-        /* 背景變暗覆蓋層 */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); 
-            z-index: -1;
-        }
-
-        /* --- 新增：最高級別標題樣式 (元界創想 伺服器) --- */
         .main-title {
-            z-index: 10;
-            font-size: 7em; /* 非常大的標題 */
-            font-weight: 900;
-            margin-bottom: 10px; /* 與下方內容間隔 */
-            
-            /* 應用主標題的流動漸層效果 */
-            background: linear-gradient(
-                90deg, #f00, #ff7f00, #ff0, #0f0, #0ff, #00f, #8b00ff, #f00
-            );
-            -webkit-background-clip: text; 
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 400% 100%; 
-            animation: color-flow 10s linear infinite; 
-            /* 輕微的陰影讓它在背景上更突出，但不模糊 */
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1); 
-        }
-
-        /* --- 升級內容文字樣式 --- */
-        .upgrade-info {
-            z-index: 10;
-            font-size: 2.5em; 
-            font-weight: 700;
-            margin-bottom: 40px; /* 與下方切換區間隔 */
-            text-align: center; 
-            line-height: 1.2; 
-            
-            /* 沿用副標題的流動漸層效果 */
-            background: linear-gradient(
-                90deg, #00ffff, #00ff00, #ffff00, #ff00ff, #00ffff 
-            );
-            -webkit-background-clip: text; 
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 300% 100%; 
-            animation: color-flow-slow 15s linear infinite; 
-        }
-
-        @keyframes color-flow-slow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 300% 50%; }
-        }
-
-        /* --- 主顯示區域容器 (三個元素都在這裡交替顯示) --- */
-        .main-display-container {
-            position: relative;
-            width: 400px; 
-            height: 100px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px; 
-        }
-
-        /* 將所有可切換的元素絕對定位，並預設隱藏 */
-        .switchable-element {
-            position: absolute;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out; 
-            display: flex; 
-            align-items: center;
-            gap: 20px;
-        }
-        
-        /* --- 1. 清晰彩色主標題樣式 (用於切換區的 '正在升級') --- */
-        .upgrade-text {
-            font-size: 5em;
-            font-weight: 900;
-            background: linear-gradient(
-                90deg, #f00, #ff7f00, #ff0, #0f0, #0ff, #00f, #8b00ff, #f00
-            );
-            -webkit-background-clip: text; 
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 400% 100%; 
-            animation: color-flow 10s linear infinite; 
-        }
-
-        /* 顏色流動的 Keyframes (應用於所有需要快速流動效果的元素) */
-        @keyframes color-flow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 400% 50%; }
-        }
-
-        /* --- 2. 旋轉環形樣式 --- */
-        .spinner {
-            width: 80px; 
-            height: 80px; 
-            border: 8px solid rgba(255, 255, 255, 0.1); 
-            border-top-color: #00ffff; 
-            border-right-color: #ff00ff; 
-            border-radius: 50%; 
-            
-            animation: 
-                spin 1.5s linear infinite, 
-                spinner-glow 1s ease-in-out infinite alternate; 
-        }
-
-        /* 旋轉動畫 Keyframes */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* 旋轉環的光暈閃爍動畫 */
-        @keyframes spinner-glow {
-            0% { box-shadow: 0 0 10px #00ffff; }
-            100% { box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff; }
-        }
-        
-        /* --- 3. 百分比文字樣式 --- */
-        #percentage-text-switch {
-            font-size: 5em;
-            font-weight: 900;
-            color: #00ffff; 
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-            /* 百分比文字也要套用流動漸層 */
-            background: linear-gradient(
-                90deg, #00ffff, #00ff00, #ffff00, #00ffff
-            );
-            -webkit-background-clip: text; 
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 400% 100%; 
-            animation: color-flow 8s linear infinite reverse; 
-        }
-
-        /* --- 進度條區域樣式 (獨立在下方) --- */
-        .progress-area {
-            width: 80vw;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start; 
-        }
-        
-        /* 額外提示文字 (取代進度條上方的 % 數) */
-        #progress-area-text {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #00ffff; 
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); 
+            font-size: 3em;
+            color: #00ff00; /* 成功的綠色 */
             margin-bottom: 5px;
-            align-self: flex-end; 
+        }
+
+        .info-text {
+            font-size: 1.5em;
+            color: #ffcc00; /* 成功的金色提示 */
+            margin-bottom: 30px;
+        }
+
+        .completion-message {
+            font-size: 2.5em;
+            color: #00ff00;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .progress-area {
+            width: 80%;
+            max-width: 500px;
+        }
+        
+        #progress-area-text {
+            font-size: 1.2em;
+            color: #00ff00;
+            margin-bottom: 5px;
+            text-align: right;
         }
 
         .progress-bar-container {
             width: 100%;
-            height: 30px;
-            background-color: rgba(255, 255, 255, 0.1); 
-            border-radius: 15px;
-            overflow: hidden; 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.3);
+            height: 25px;
+            background-color: #333;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
-            width: 0%; 
-            border-radius: 15px;
-            
-            background: linear-gradient(
-                90deg, #00ffff, #00ff00, #ffff00, #ff00ff 
-            );
-            background-size: 200% 100%; 
-            
-            animation: 
-                progress-move 2s linear infinite, 
-                progress-glow 1.5s ease-in-out infinite alternate; 
-            
-            transition: width 0.1s linear; 
+            width: 100%; /* 100% 完成 */
+            border-radius: 12px;
+            background-color: #00ff00; /* 實心綠色 */
         }
-
-        @keyframes progress-move {
-            0% { background-position: 200% 0; }
-            100% { background-position: 0% 0; }
-        }
-
-        @keyframes progress-glow {
-            0% { box-shadow: 0 0 10px #00ffff; }
-            100% { box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff; }
-        }
-
     </style>
 </head>
 <body>
     
     <div class="main-title">
-        元界創想 伺服器
+        元界創想 伺服器已啟動
     </div>
     
-    <div class="upgrade-info">
-        等待主機板 tuf gaming z790-plus wifi d4 atx<br>
-        等待 CPU i5-14600<br>
-        等待 散熱器
+    <div class="info-text">
+        升級完成，系統穩定運作
     </div>
 
-    <div class="main-display-container">
-        
-        <div id="textSwitch" class="switchable-element">
-            <div class="upgrade-text">正在升級</div>
-        </div>
-
-        <div id="spinnerSwitch" class="switchable-element">
-            <div class="spinner"></div>
-        </div>
-
-        <div id="percentageSwitch" class="switchable-element">
-            <div id="percentage-text-switch">0%</div>
-        </div>
+    <div class="completion-message">
+        🚀 啟動成功！
     </div>
 
     <div class="progress-area">
-        <div id="progress-area-text">正在處理...</div> 
+        <div id="progress-area-text">100% - 運行狀態：穩定</div> 
         <div class="progress-bar-container">
             <div class="progress-bar" id="progressBar"></div>
         </div>
     </div>
     
-    <script>
-        const progressBar = document.getElementById('progressBar');
-        const progressAreaText = document.getElementById('progress-area-text');
-        
-        // 可切換的元素陣列
-        const switchElements = [
-            document.getElementById('textSwitch'),
-            document.getElementById('spinnerSwitch'),
-            document.getElementById('percentageSwitch')
-        ];
-        
-        const percentageSwitchText = document.getElementById('percentage-text-switch');
-        let currentElementIndex = 0;
-        let progress = 0; 
-        const maxProgress = 80; // 進度上限
-        const switchInterval = 1000; // 每個項目顯示 1 秒
-        
-        // --- 元素切換邏輯 ---
-        function switchDisplay() {
-            // 隱藏當前元素
-            switchElements[currentElementIndex].style.opacity = '0';
-            
-            // 計算下一個要顯示的元素索引
-            currentElementIndex = (currentElementIndex + 1) % switchElements.length;
-            
-            // 顯示下一個元素
-            switchElements[currentElementIndex].style.opacity = '1';
-
-            // 如果進度未完成，則繼續切換
-            if (progress < maxProgress) {
-                setTimeout(switchDisplay, switchInterval);
-            }
-        }
-        
-        // --- 進度條邏輯 ---
-        function updateProgress() {
-            if (progress < maxProgress) {
-                progress += 1; 
-                
-                // 更新進度條的 CSS 寬度
-                progressBar.style.width = progress + '%';
-                
-                // 更新切換顯示的百分比文字
-                percentageSwitchText.textContent = progress + '%';
-                
-                // 更新進度條上方的文字提示
-                progressAreaText.textContent = `進度條載入中... ${progress}%`;
-
-                // 模擬載入速度
-                setTimeout(updateProgress, 50); 
-            } else {
-                // 進度達到 80% 時停止
-                progressAreaText.textContent = `80% - 等待零件中...`;
-                
-                // 最終停止切換，只顯示「正在升級」文字
-                switchElements.forEach(el => el.style.opacity = '0');
-                document.getElementById('textSwitch').style.opacity = '1';
-            }
-        }
-
-        // 初始設置：先顯示第一個元素，並啟動進度條和切換
-        switchElements[0].style.opacity = '1';
-        updateProgress();
-        setTimeout(switchDisplay, switchInterval); // 延遲 1 秒後開始切換
-
-    </script>
 </body>
 </html>
+
