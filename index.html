@@ -3,90 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>元界創想-已啟動</title>
+    <title>元界創想 - 伺服器購買頁面</title>
     <style>
+        :root {
+            /* 定義彩色漸變配色 */
+            --grad-primary: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --grad-surface: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+            --bg-dark: #0f172a;
+            --text-main: #f8fafc;
+        }
+
         body {
-            /* 簡化背景 */
-            background-color: #1a1a1a; 
-            color: #e0e0e0;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column; 
-            justify-content: center;
-            align-items: center;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            color: var(--text-main);
             margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            padding: 20px 5%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header {
             text-align: center;
+            padding: 60px 20px;
         }
 
-        .main-title {
-            font-size: 3em;
-            color: #00ff00; /* 成功的綠色 */
-            margin-bottom: 5px;
+        /* 標題漸變文字 */
+        .header h1 {
+            font-size: 3rem;
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
         }
 
-        .info-text {
-            font-size: 1.5em;
-            color: #ffcc00; /* 成功的金色提示 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+        }
+
+        .config-card {
+            background: var(--grad-surface);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 4px;
+            height: 24px;
+            background: var(--grad-primary);
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+        /* 控制列 */
+        .control-row {
             margin-bottom: 30px;
         }
 
-        .completion-message {
-            font-size: 2.5em;
-            color: #00ff00;
-            margin-bottom: 40px;
-            font-weight: bold;
+        .label-box {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #94a3b8;
         }
 
-        .progress-area {
-            width: 80%;
-            max-width: 500px;
-        }
-        
-        #progress-area-text {
-            font-size: 1.2em;
-            color: #00ff00;
-            margin-bottom: 5px;
-            text-align: right;
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
 
-        .progress-bar-container {
+        input[type="range"] {
+            flex: 1;
+            accent-color: #a855f7;
+        }
+
+        input[type="number"], select {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            width: 90px;
+            text-align: center;
+        }
+
+        /* 右側結帳卡片 */
+        .checkout-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .price-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .price-unit { font-size: 1rem; color: #94a3b8; }
+
+        .buy-btn {
+            display: block;
             width: 100%;
-            height: 25px;
-            background-color: #333;
-            border-radius: 12px;
-            overflow: hidden;
+            text-decoration: none;
+            text-align: center;
+            background: var(--grad-primary);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.4);
         }
 
-        .progress-bar {
-            height: 100%;
-            width: 100%; /* 100% 完成 */
-            border-radius: 12px;
-            background-color: #00ff00; /* 實心綠色 */
+        .buy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(168, 85, 247, 0.6);
+            filter: brightness(1.1);
+        }
+
+        .feature-tag {
+            background: rgba(255,255,255,0.05);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1000px) {
+            .container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    
-    <div class="main-title">
-        元界創想 伺服器已啟動
-    </div>
-    
-    <div class="info-text">
-        升級完成，系統穩定運作
-    </div>
 
-    <div class="completion-message">
-        🚀 啟動成功！
-    </div>
+<div class="navbar">
+    <strong>元界創想 MetaVision</strong>
+</div>
 
-    <div class="progress-area">
-        <div id="progress-area-text">100% - 運行狀態：穩定</div> 
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progressBar"></div>
+<div class="header">
+    <h1>元界創想 伺服器 購買頁面</h1>
+    <p>自定義您的數位基石，體驗極限性能</p>
+</div>
+
+<div class="container">
+    <div class="config-card">
+        
+        <div class="section-title">核心算力配置</div>
+        
+        <div class="control-row">
+            <div class="label-box">
+                <span>處理位元數 (Architecture)</span>
+                <span class="feature-tag">高性能指令集</span>
+            </div>
+            <select id="bit" style="width: 100%;" onchange="update()">
+                <option value="0">x86_64 (64-bit)</option>
+                <option value="1500">ARM128 (128-bit 實驗型)</option>
+            </select>
+        </div>
+
+        <div class="control-row">
+            <div class="label-box">
+                <span>核心數量 (Cores)</span>
+                <span id="v-cores">16</span>
+            </div>
+            <div class="input-group">
+                <input type="range" id="r-cores" min="1" max="192" value="16" oninput="sync('cores')">
+                <input type="number" id="n-cores" min="1" max="192" value="16" oninput="sync('cores')">
+            </div>
+        </div>
+
+        <div class="control-row">
+            <div class="label-box">
+                <span>時脈速度 (Clock Speed)</span>
+                <span id="v-clock">3.50 GHz</span>
+            </div>
+            <div class="input-group">
+                <input type="range" id="r-clock" min="1" max="5.5" step="0.01" value="3.5" oninput="sync('clock')">
+                <input type="number" id="n-clock" min="1" max="5.5" step="0.01" value="3.5" oninput="sync('clock')">
+            </div>
+        </div>
+
+        <div class="control-row">
+            <div class="label-box">
+                <span>L3 快取 (Cache)</span>
+                <span id="v-cache">128 MB</span>
+            </div>
+            <div class="input-group">
+                <input type="range" id="r-cache" min="1" max="1152" value="128" oninput="sync('cache')">
+                <input type="number" id="n-cache" min="1" max="1152" value="128" oninput="sync('cache')">
+            </div>
+        </div>
+
+        <div class="section-title">存儲與資源</div>
+        
+        <div class="control-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label style="font-size: 0.8rem; color:#94a3b8;">記憶體大小 (MB)</label>
+                <input type="number" id="ram" value="16384" style="width:100%; margin-top:5px;" oninput="update()">
+            </div>
+            <div>
+                <label style="font-size: 0.8rem; color:#94a3b8;">GPU 顯存 (MB)</label>
+                <input type="number" id="gpu" value="0" style="width:100%; margin-top:5px;" oninput="update()">
+            </div>
+        </div>
+
+        <div class="control-row">
+            <label style="font-size: 0.8rem; color:#94a3b8;">硬碟類型與容量 (MB)</label>
+            <div class="input-group" style="margin-top:5px;">
+                <select id="diskType" onchange="update()">
+                    <option value="0.5">SATA HDD</option>
+                    <option value="1.2">NVMe SSD</option>
+                    <option value="2.5">Enterprise NVMe</option>
+                </select>
+                <input type="number" id="diskSize" value="512000" style="flex:1;" oninput="update()">
+            </div>
+        </div>
+
+        <div class="section-title">傳輸鏈路</div>
+        <div class="control-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label style="font-size: 0.8rem; color:#94a3b8;">上傳速度 (Mbps)</label>
+                <input type="number" id="up" value="100" style="width:100%;" oninput="update()">
+            </div>
+            <div>
+                <label style="font-size: 0.8rem; color:#94a3b8;">下載速度 (Mbps)</label>
+                <input type="number" id="down" value="100" style="width:100%;" oninput="update()">
+            </div>
         </div>
     </div>
-    
+
+    <div class="checkout-card">
+        <h3 style="margin-top:0;">訂單摘要</h3>
+        <div id="summary-text" style="color: #94a3b8; font-size: 0.9rem; line-height: 1.8;">
+            </div>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+        <div class="price-display">
+            <span class="price-unit">TWD</span> <span id="total">0</span>
+        </div>
+        
+        <a href="https://mvo.qzz.io" class="buy-btn">
+            立即購買部署
+        </a>
+        
+        <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: #64748b;">
+            預計部署時間：約 120 秒
+        </div>
+    </div>
+</div>
+
+<script>
+    function sync(id) {
+        const r = document.getElementById('r-' + id);
+        const n = document.getElementById('n-' + id);
+        if (event.target.type === 'range') {
+            n.value = r.value;
+        } else {
+            r.value = n.value;
+        }
+        update();
+    }
+
+    function update() {
+        const cores = parseInt(document.getElementById('n-cores').value);
+        const clock = parseFloat(document.getElementById('n-clock').value);
+        const cache = parseInt(document.getElementById('n-cache').value);
+        const bitCost = parseInt(document.getElementById('bit').value);
+        const ram = parseInt(document.getElementById('ram').value);
+        const gpu = parseInt(document.getElementById('gpu').value);
+        const diskSize = parseInt(document.getElementById('diskSize').value);
+        const diskTypeMult = parseFloat(document.getElementById('diskType').value);
+        const net = parseInt(document.getElementById('up').value) + parseInt(document.getElementById('down').value);
+
+        // 模擬市面上價格公式
+        // 核心費 + 時脈溢價 + 快取費 + 記憶體與硬碟 + 網路
+        let price = (cores * 120) + (clock * 200) + (cache * 1.5) + (ram * 0.05) + (gpu * 0.2) + (diskSize * 0.001 * diskTypeMult) + (net * 0.8) + bitCost;
+
+        document.getElementById('total').innerText = Math.floor(price).toLocaleString();
+        
+        // 更新顯示文字
+        document.getElementById('v-cores').innerText = cores + " Cores";
+        document.getElementById('v-clock').innerText = clock.toFixed(2) + " GHz";
+        document.getElementById('v-cache').innerText = cache + " MB";
+
+        document.getElementById('summary-text').innerHTML = `
+            ● 處理器：${cores} 核 / ${clock.toFixed(2)} GHz<br>
+            ● 緩存：${cache} MB L3 Cache<br>
+            ● 記憶體：${(ram/1024).toFixed(1)} GB RAM<br>
+            ● 存儲：${(diskSize/1024).toFixed(1)} GB NVMe<br>
+            ● 網路：${net} Mbps 總頻寬
+        `;
+    }
+
+    update();
+</script>
+
 </body>
 </html>
 
