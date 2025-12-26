@@ -3,104 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>元界創想 - 資源調度控制台</title>
+    <title>元界創想 - 免費伺服器資源中心</title>
     <style>
         :root {
             --neon-gold: #ffcc00;
-            --neon-red: #ff3c3c;
             --bg-black: #08080a;
-            --glass: rgba(255, 255, 255, 0.05);
+            --panel-bg: rgba(18, 18, 22, 0.95);
+            --border: rgba(255, 204, 0, 0.2);
+            /* 社群顏色 */
+            --color-fb: #1877F2;
+            --color-dc: #5865F2;
+            --color-line: #06C755;
+            --color-mail: #ea4335;
         }
 
         body {
             background-color: var(--bg-black);
             color: #fff;
-            font-family: 'Segoe UI', 'PingFang TC', monospace;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             margin: 0;
             overflow-x: hidden;
-            /* 背景裝飾 */
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 204, 0, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(255, 60, 60, 0.05) 0%, transparent 40%);
         }
 
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-
-        /* 圖片容器區 */
-        .brand-visual {
+        /* --- CSS 抽象圖案頁首 --- */
+        .pattern-header {
             width: 100%;
-            height: 250px;
-            background: #111;
-            border: 1px solid #333;
-            margin-bottom: 30px;
-            border-radius: 15px;
+            height: 320px;
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
+            position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid var(--neon-gold);
+        }
+
+        /* 抽象線條圖案 */
+        .pattern-header::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(255,204,0,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,204,0,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: rotate(15deg);
+            z-index: 1;
+        }
+
+        .logo-symbol {
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--neon-gold);
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.3);
+            z-index: 2;
+            margin-bottom: 20px;
+        }
+
+        .logo-symbol::after {
+            content: "";
+            width: 40px;
+            height: 40px;
+            background: var(--neon-gold);
+        }
+
+        .header-title {
+            z-index: 2;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 10px;
+            background: linear-gradient(to bottom, #fff, var(--neon-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- 主內容區 --- */
+        .container {
+            max-width: 1100px;
+            margin: -40px auto 60px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 25px;
+            padding: 0 20px;
+            z-index: 5;
             position: relative;
         }
 
-        .brand-visual img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 圖片會自動填滿容器 */
-            opacity: 0.7;
-            transition: 0.5s;
-        }
-
-        .brand-visual:hover img { opacity: 1; transform: scale(1.02); }
-
-        .brand-overlay {
-            position: absolute;
-            bottom: 20px;
-            left: 30px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-        }
-
-        /* 佈局 */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 30px;
-        }
-
-        .config-box {
-            background: var(--glass);
+        .config-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 4px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 35px;
         }
 
-        .section-h {
-            font-size: 1.2rem;
+        .section-title {
             color: var(--neon-gold);
-            margin: 30px 0 20px 0;
+            font-size: 1rem;
+            margin: 25px 0 20px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .section-h::after { content: ""; flex: 1; height: 1px; background: rgba(255,204,0,0.2); }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: rgba(255,204,0,0.1); }
 
-        /* 控制列 */
-        .row {
+        .control-row {
             display: grid;
-            grid-template-columns: 150px 1fr 100px;
+            grid-template-columns: 140px 1fr 100px;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
+            gap: 15px;
         }
 
-        input[type="range"] { accent-color: var(--neon-gold); cursor: pointer; }
+        input[type="range"] { accent-color: var(--neon-gold); }
         input[type="number"], select {
-            background: #000; border: 1px solid #444; color: #fff;
-            padding: 8px; border-radius: 5px; text-align: center;
+            background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px;
         }
 
-        /* 側邊資訊 */
-        .summary-box {
-            background: linear-gradient(145deg, #1a1a1c, #0a0a0b);
+        /* 右側面板 */
+        .summary-card {
+            background: #000;
+            border: 2px solid var(--neon-gold);
+            padding: 30px;
+            border-radius: 4px;
+            height: fit-content;
+        }
+
+        .price-display {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            color: var(--neon-gold);
+            margin: 20px 0;
+        }
+
+        .claim-btn {
+            width: 100%;
+            background: var(--neon-gold);
+            color: #000;
+            padding: 22px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .claim-btn:hover { box-shadow: 0 0 30px var(--neon-gold); transform: translateY(-3px); }
+
+        /* --- 酷炫聯絡彈窗 --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #111;
             border: 1px solid var(--neon-gold);
-            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            border-radius: 15px;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: 0.2s;
+        }
+
+        .btn-fb { background: var(--color-fb); }
+        .btn-dc { background: var(--color-dc); }
+        .btn-line { background: var(--color-line); }
+        .btn-email { background: var(--color-mail); }
+
+        .contact-btn:hover { filter: brightness(1.2); transform: translateX(5px); }
+
+        .close-modal {
+            margin-top: 20px;
+            color: #666;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 850px) {
+            .container { grid-template-columns: 1fr; margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pattern-header">
+        <div class="logo-symbol"></div>
+        <div class="header-title">
+            <h1>元界創想</h1>
+            <p style="color: #666; letter-spacing: 4px;">META-RESOURCE CONTROL UNIT</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="config-card">
+            <div class="section-title">核心性能配置 (PERFORMANCE)</div>
+            
+            <div class="control-row">
+                <label>處理位元數</label>
+                <select id="bit" style="grid-column: span 2;" onchange="update()">
+                    <option value="64">Standard 64-Bit</option>
+                    <option value="128">Quantum 128-Bit</option>
+                </select>
+            </div>
+
+            <div class="control-row">
+                <label>核心數量</label>
+                <input type="range" id="r-cores" min="1" max="192" value="32" oninput="sync('cores')">
+                <input type="number" id="n-cores" min="1" max="192" value="32" oninput="sync('cores')">
+            </div>
+
+            <div class="control-row">
+                <label>時脈頻率 (GHz)</label>
+                <input type="range" id="r-clock" min="1" max="5.5" step="0.01" value="3.5" oninput="sync('clock')">
+                <input type="number" id="n-clock" min="1" max="5.5" step="0.01" value="3.5" oninput="sync('clock')">
+            </div>
+
+            <div class="control-row">
+                <label>L3 快取 (MB)</label>
+                <input type="range" id="r-cache" min="1" max="1152" value="128" oninput="sync('cache')">
+                <input type="number" id="n-cache" min="1" max="1152" value="128" oninput="sync('cache')">
+            </div>
+
+            <div class="section-title">儲存與暫存空間 (STORAGE)</div>
+            <div class="control-row"><label>記憶體 (MB)</label><input type="number" id="ram" value="16384" style="grid-column: span 2;" oninput="update()"></div>
+            <div class="control-row"><label>顯存 (MB)</label><input type="number" id="gpu" value="8192" style="grid-column: span 2;" oninput="update()"></div>
+            <div class="control-row"><label>硬碟 (MB)</label><input type="number" id="disk" value="512000" style="grid-column: span 2;" oninput="update()"></div>
+        </div>
+
+        <div class="summary-card">
+            <h3 style="margin:0; border-bottom: 1px solid #333; padding-bottom: 10px;">結帳摘要</h3>
+            <div id="summary-info" style="font-size: 0.85rem; color: #888; line-height: 2; margin-top: 15px;"></div>
+            
+            <div class="price-display">$0</div>
+            <p style="text-align: center; color: var(--neon-gold); font-size: 0.8rem; margin-top: -15px;">本專案由組織全額贊助</p>
+
+            <button class="claim-btn" onclick="openModal()">立即領取</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-content">
+            <h2 style="color: var(--neon-gold); margin-bottom: 5px;">啟動伺服器</h2>
+            <p style="color: #888; margin-bottom: 30px;">請洽詢本組織後啟用您的專屬資源</p>
+            
+            <a href="https://www.facebook.com/share/14RS42QiMjr/" target="_blank" class="contact-btn btn-fb">
+                <span>Facebook 洽詢</span>
+            </a>
+            
+            <a href="https://discord.com/invite/EDbJt7X4QF" target="_blank" class="contact-btn btn-dc">
+                <span>Discord 社群</span>
+            </a>
+            
+            <a href="https://lin.ee/P0gWxOg" target="_blank" class="contact-btn btn-line">
+                <span>LINE 官方客服</span>
+            </a>
+            
+            <a href="mailto:mv.org.tw@gmail.com" class="contact-btn btn-email">
+                <span>Email 聯絡</span>
+            </a>
+
+            <div class="close-modal" onclick="closeModal()">返回調整配置</div>
+        </div>
+    </div>
+
+    <script>
+        function sync(id) {
+            const r = document.getElementById('r-' + id);
+            const n = document.getElementById('n-' + id);
+            if (event.target.type === 'range') n.value = r.value; else r.value = n.value;
+            update();
+        }
+
+        function update() {
+            const cores = document.getElementById('n-cores').value;
+            const clock = document.getElementById('n-clock').value;
+            const ram = document.getElementById('ram').value;
+            const disk = document.getElementById('disk').value;
+
+            document.getElementById('summary-info').innerHTML = `
+                > 核心：${cores} vCores <br>
+                > 頻率：${parseFloat(clock).toFixed(2)} GHz <br>
+                > 記憶體：${(ram/1024).toFixed(1)} GB <br>
+                > 存儲：${(disk/1024).toFixed(1)} GB <br>
+                > 狀態：等待申領中
+            `;
+        }
+
+        function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
+
+        update();
+    </script>
+</body>
+</html>
             padding: 30px;
             height: fit-content;
             position: sticky;
