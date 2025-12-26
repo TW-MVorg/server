@@ -3,252 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>元界創想 | 免費伺服器申領計畫</title>
+    <title>元界創想 - 免費伺服器領取</title>
     <style>
+        /* 全域變數定義 */
         :root {
-            --neon-cyan: #00f2ff;
-            --neon-purple: #bc13fe;
+            --gold: #ffcc00;
+            --dark-gold: #b8860b;
+            --bg-black: #050505;
             --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 204, 0, 0.2);
         }
 
         body {
+            background-color: var(--bg-black);
+            color: #ffffff;
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #050505;
-            color: #fff;
             margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(0, 242, 255, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(188, 19, 254, 0.05) 0%, transparent 40%);
         }
 
-        /* 頂部霓虹線條 */
-        .top-bar {
-            height: 4px;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-cyan));
-            background-size: 200% auto;
-            animation: moveGradient 3s linear infinite;
-        }
-
-        @keyframes moveGradient { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-
-        .hero-section {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .badge {
-            background: rgba(0, 242, 255, 0.1);
-            color: var(--neon-cyan);
-            padding: 8px 20px;
-            border-radius: 100px;
-            border: 1px solid var(--neon-cyan);
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            margin: 20px 0;
-            background: linear-gradient(to bottom, #fff 30%, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* 規格展示大卡片 */
-        .main-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 32px;
-            padding: 50px;
-            position: relative;
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        .main-card::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(transparent, transparent, transparent, var(--neon-cyan));
-            animation: rotate 10s linear infinite;
-            opacity: 0.1;
+        /* 漸變背景效果 (純 CSS) */
+        .bg-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 204, 0, 0.05) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
             z-index: -1;
         }
 
-        @keyframes rotate { 100% { transform: rotate(360deg); } }
-
-        /* 左側規格列表 */
-        .spec-item {
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 10px;
+        .container {
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
         }
 
-        .spec-label { color: #94a3b8; font-size: 0.9rem; }
-        .spec-value { font-weight: 600; color: var(--neon-cyan); }
+        /* 標題動畫 */
+        .title-area h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            letter-spacing: 4px;
+            background: linear-gradient(to right, #fff, var(--gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
 
-        /* 右側領取區域 */
-        .claim-zone {
+        /* 核心大卡片 */
+        .free-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 2px; /* 稜角設計更顯硬核 */
+            padding: 40px;
+            margin-top: 40px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            text-align: left;
+        }
+
+        /* 裝飾線條 (純 CSS) */
+        .free-card::before {
+            content: "";
+            position: absolute;
+            top: -1px; left: -1px;
+            width: 50px; height: 50px;
+            border-top: 3px solid var(--gold);
+            border-left: 3px solid var(--gold);
+        }
+
+        .free-card::after {
+            content: "";
+            position: absolute;
+            bottom: -1px; right: -1px;
+            width: 50px; height: 50px;
+            border-bottom: 3px solid var(--gold);
+            border-right: 3px solid var(--gold);
+        }
+
+        .spec-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .spec-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,204,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .spec-list span:first-child { color: #888; }
+        .spec-list span:last-child { color: var(--gold); font-family: monospace; font-weight: bold; }
+
+        /* 右側領取區 */
+        .action-zone {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            border-left: 1px solid var(--glass-border);
+            border-left: 1px solid var(--border);
             padding-left: 40px;
         }
 
-        .free-price {
-            font-size: 5rem;
-            font-weight: 900;
-            margin: 0;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(255,255,255,0.2);
-        }
-
-        .original-price {
-            text-decoration: line-through;
-            color: #64748b;
+        .price-tag {
             font-size: 1.2rem;
-            margin-bottom: 30px;
+            color: #666;
+            text-decoration: line-through;
         }
 
-        .claim-btn {
+        .free-text {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #fff;
+            margin: 10px 0;
+            letter-spacing: -2px;
+        }
+
+        .btn-claim {
+            display: inline-block;
             width: 100%;
-            background: #fff;
+            background: var(--gold);
             color: #000;
             text-decoration: none;
-            padding: 22px;
-            border-radius: 16px;
-            font-size: 1.4rem;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 1.2rem;
             font-weight: 800;
-            transition: 0.4s;
-            box-shadow: 0 0 40px rgba(255,255,255,0.2);
+            margin-top: 20px;
+            transition: 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); /* 切角按鈕設計 */
         }
 
-        .claim-btn:hover {
-            transform: scale(1.05);
-            background: var(--neon-cyan);
-            box-shadow: 0 0 50px rgba(0, 242, 255, 0.4);
+        .btn-claim:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
         }
 
-        .status-bar {
+        .quota-info {
+            margin-top: 25px;
             width: 100%;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            margin: 20px 0 10px;
-            overflow: hidden;
         }
 
-        .status-fill {
-            width: 87%;
+        .progress-bg {
+            height: 4px;
+            background: rgba(255,204,0,0.1);
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
             height: 100%;
-            background: var(--neon-purple);
-            box-shadow: 0 0 10px var(--neon-purple);
+            background: var(--gold);
+            width: 74%; /* 模擬已領取比例 */
+            box-shadow: 0 0 10px var(--gold);
         }
 
-        @media (max-width: 850px) {
-            .main-card { grid-template-columns: 1fr; padding: 30px; }
-            .claim-zone { border-left: none; border-top: 1px solid var(--glass-border); padding: 40px 0 0; }
-            h1 { font-size: 2.5rem; }
+        @media (max-width: 768px) {
+            .free-card { grid-template-columns: 1fr; }
+            .action-zone { border-left: none; border-top: 1px solid var(--border); padding: 30px 0 0 0; }
         }
     </style>
 </head>
 <body>
 
-<div class="top-bar"></div>
+    <div class="bg-glow"></div>
 
-<div class="container">
-    <div class="hero-section">
-        <span class="badge">MetaVision Free Tier</span>
-        <h1>元界創想 免費伺服器</h1>
-        <p style="color: #94a3b8;">打破門檻，讓每一位創作者都能擁有高品質的運算資源</p>
-    </div>
+    <div class="container">
+        <div class="title-area">
+            <h1>元界創想</h1>
+            <p style="color: var(--gold); letter-spacing: 5px;">FREE SERVER PLAN</p>
+        </div>
 
-    <div class="main-card">
-        <div class="specs-box">
-            <h3 style="color: #fff; margin-bottom: 30px;">領取規格清單</h3>
-            
-            <div class="spec-item">
-                <span class="spec-label">處理位元數</span>
-                <span class="spec-value">64-bit Architecture</span>
+        <div class="free-card">
+            <div class="specs">
+                <h3 style="margin-top: 0; color: #fff;">[ 永久免費規格 ]</h3>
+                <ul class="spec-list">
+                    <li><span>處理位元數</span><span>64-Bit</span></li>
+                    <li><span>核心數量</span><span>4 Cores</span></li>
+                    <li><span>時脈速度</span><span>3.50 GHz</span></li>
+                    <li><span>L3 快取</span><span>16 MB</span></li>
+                    <li><span>記憶體</span><span>8,192 MB</span></li>
+                    <li><span>硬碟類型</span><span>NVMe SSD</span></li>
+                    <li><span>硬碟容量</span><span>61,440 MB</span></li>
+                    <li><span>網路頻寬</span><span>100 Mbps</span></li>
+                </ul>
             </div>
-            <div class="spec-item">
-                <span class="spec-label">核心數量</span>
-                <span class="spec-value">4 vCPU Cores</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">時脈速度</span>
-                <span class="spec-value">3.20 GHz</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">L3 快取</span>
-                <span class="spec-value">16 MB</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">記憶體大小</span>
-                <span class="spec-value">8,192 MB (8GB)</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">硬碟類型</span>
-                <span class="spec-value">High-Speed SSD</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">硬碟容量</span>
-                <span class="spec-value">40,960 MB (40GB)</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">網路頻寬</span>
-                <span class="spec-value">100 / 100 Mbps</span>
+
+            <div class="action-zone">
+                <span class="price-tag">VALUE $1,200 / MO</span>
+                <span class="free-text">FREE</span>
+                
+                <a href="https://mvo.qzz.io" class="btn-claim">立即領取部署</a>
+
+                <div class="quota-info">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #888;">
+                        <span>伺服器庫存狀態</span>
+                        <span style="color: var(--gold);">74% 已被申領</span>
+                    </div>
+                    <div class="progress-bg">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p style="font-size: 0.7rem; color: #555; margin: 0;">* 每人限領一次，資源由元界創想社區提供。</p>
+                </div>
             </div>
         </div>
 
-        <div class="claim-zone">
-            <p style="color: var(--neon-cyan); margin: 0; font-weight: bold; letter-spacing: 2px;">限時申領</p>
-            <h2 class="free-price">$0</h2>
-            <div class="original-price">原價 $899 / 月</div>
-
-            <a href="https://mvo.qzz.io" class="claim-btn">
-                立即領取部署
-            </a>
-
-            <div class="status-bar">
-                <div class="status-fill"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.8rem; color: #64748b;">
-                <span>已領取 87%</span>
-                <span>剩餘 132 台</span>
-            </div>
-
-            <p style="font-size: 0.8rem; color: #475569; margin-top: 30px;">
-                * 每個帳號限領取一台，需通過基礎驗證。
-            </p>
-        </div>
+        <p style="margin-top: 50px; font-size: 0.8rem; color: #333; letter-spacing: 2px;">
+            &copy; 2025 METAVISION INC. SYSTEM STATUS: <span style="color: #0f0;">ONLINE</span>
+        </p>
     </div>
-
-    <div style="text-align: center; margin-top: 40px; color: #334155; font-size: 0.9rem;">
-        Powered by 元界創想 MetaVision Quantum Infrastructure
-    </div>
-</div>
 
 </body>
 </html>
