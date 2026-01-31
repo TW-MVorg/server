@@ -24,7 +24,7 @@
 
         .pattern-header {
             width: 100%;
-            height: 200px;
+            height: 180px;
             background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%);
             display: flex;
             flex-direction: column;
@@ -69,7 +69,7 @@
             text-transform: uppercase;
         }
 
-        /* 新版選單樣式 */
+        /* OS 選項與圖示 */
         .os-category-tabs {
             display: flex;
             gap: 10px;
@@ -83,44 +83,63 @@
             cursor: pointer;
             border-radius: 4px;
             font-size: 0.8rem;
+            transition: 0.3s;
         }
         .tab-btn.active {
             border-color: var(--neon-gold);
             color: var(--neon-gold);
             background: rgba(255, 204, 0, 0.1);
         }
+
         .os-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 8px;
-            max-height: 300px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            max-height: 350px;
             overflow-y: auto;
             padding: 10px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.5);
             border: 1px solid #222;
+            border-radius: 4px;
         }
+
         .os-item {
             background: #1a1a1a;
             border: 1px solid #333;
-            padding: 10px;
+            padding: 15px 10px;
             font-size: 0.75rem;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
+
+        .os-item svg {
+            width: 24px;
+            height: 24px;
+            fill: #666;
+            transition: 0.2s;
+        }
+
         .os-item:hover { border-color: var(--neon-gold); background: #222; }
+        .os-item:hover svg { fill: var(--neon-gold); }
+
         .os-item.selected {
             background: var(--neon-gold);
             color: #000;
             border-color: var(--neon-gold);
             font-weight: bold;
         }
+        .os-item.selected svg { fill: #000; }
 
         .row {
             display: grid;
             grid-template-columns: 140px 1fr 100px;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             gap: 15px;
         }
 
@@ -147,7 +166,7 @@
         }
 
         #capture-area::before {
-            content: "MV-OS VERIFIED";
+            content: "METAVISION CORE";
             position: absolute;
             top: 10px; right: 10px;
             font-size: 0.6rem; color: var(--neon-gold); opacity: 0.5;
@@ -215,8 +234,6 @@
             transition: 0.2s;
         }
 
-        .c-btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
-
         @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -233,13 +250,12 @@
             <div class="section-title">作業系統選取 (Operating System)</div>
             
             <div class="os-category-tabs">
-                <button class="tab-btn active" onclick="showCategory('client')">Client 版</button>
-                <button class="tab-btn" onclick="showCategory('server')">Server 版</button>
+                <button class="tab-btn active" onclick="showCategory('client')">個人版 (Client)</button>
+                <button class="tab-btn" onclick="showCategory('server')">伺服器版 (Server)</button>
                 <button class="tab-btn" onclick="showCategory('special')">特殊/Linux</button>
             </div>
 
-            <div id="os-grid" class="os-grid">
-                </div>
+            <div id="os-grid" class="os-grid"></div>
 
             <div class="section-title">處理器效能 (CPU Power)</div>
             <div class="row">
@@ -275,7 +291,7 @@
         <div class="summary-card">
             <div id="capture-area">
                 <div style="border-bottom: 2px solid var(--neon-gold); padding-bottom: 8px; margin-bottom: 12px;">
-                    <strong style="color:var(--neon-gold); font-size: 1rem;">METAVISION CONFIGURATION</strong>
+                    <strong style="color:var(--neon-gold); font-size: 1rem;">METAVISION SPECIFICATION</strong>
                 </div>
                 <div id="spec-list" style="font-size: 0.85rem; color: #eee; line-height: 1.8; font-family: monospace;"></div>
             </div>
@@ -299,44 +315,48 @@
     </div>
 
     <script>
+        const icons = {
+            win_old: `<svg viewBox="0 0 24 24"><path d="M0 12l9-1.2v-6.8l-9-1.2v9.2zm10-1.3l14-2.1v-7.6l-14-1v10.7zm14 1.3l-14 2.1v10.6l14-1.1v-11.6zm-15 1.4l-9-1.3v9.2l9-1.3v-6.6z"/></svg>`,
+            win_new: `<svg viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm0 10.551h9.75v9.451L0 22.051V14zm10.5 0h13.5v10l-13.5 1.5V14zm13.5-10.551V13.45H10.5V2.1L24 3.449z"/></svg>`,
+            server: `<svg viewBox="0 0 24 24"><path d="M2 7h20v-4h-20v4zm2-3h2v2h-2v-2zm16 11h-18v4h18v-4zm-16 3h2v-2h-2v2zm16-11h-18v4h18v-4zm-16 3h2v-2h-2v2z"/></svg>`,
+            linux: `<svg viewBox="0 0 24 24"><path d="M12 2c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-1 14.5l-3.5-3.5 1.414-1.414 2.086 2.086 5.086-5.086 1.414 1.414-6.5 6.5z"/></svg>`
+        };
+
         const osData = {
-            client: [
-                "Windows 1.0", "Windows 2.0", "Windows 3.0", "Windows 3.1", "Windows 3.2",
-                "Windows 95", "Windows 98", "Windows 98 SE", "Windows Me",
-                "Windows NT 3.1", "Windows NT 3.5", "Windows NT 3.51", "Windows NT 4.0",
-                "Windows 2000", "Windows XP Home", "Windows XP Pro", "Windows XP 64-bit",
-                "Windows Vista", "Windows 7 Starter", "Windows 7 Home", "Windows 7 Pro", "Windows 7 Ultimate",
-                "Windows 8", "Windows 8.1", "Windows 10 Home", "Windows 10 Pro", "Windows 10 Ent", "Windows 11"
+            win: [
+                {n: "Windows 1.0", i: "win_old"}, {n: "Windows 2.0", i: "win_old"}, {n: "Windows 3.0", i: "win_old"},
+                {n: "Windows 3.1", i: "win_old"}, {n: "Windows 3.2", i: "win_old"}, {n: "Windows 4.0", i: "win_old"},
+                {n: "Windows 95", i: "win_old"}, {n: "Windows 98", i: "win_old"}, {n: "Windows Me", i: "win_old"},
+                {n: "Windows 2000", i: "win_old"}, {n: "Windows XP Pro", i: "win_new"}, {n: "Windows Vista", i: "win_new"},
+                {n: "Windows 7 Pro", i: "win_new"}, {n: "Windows 8.1", i: "win_new"}, {n: "Windows 10 Pro", i: "win_new"},
+                {n: "Windows 11 Pro", i: "win_new"}
             ],
             server: [
-                "Windows NT 3.1 Server", "Windows NT 3.5 Server", "Windows NT 3.51 Server", "Windows NT 4.0 Server",
-                "Windows 2000 Server", "Windows Server 2003", "Windows Server 2003 R2",
-                "Windows Server 2008", "Windows Server 2008 R2", "Windows Server 2012", "Windows Server 2012 R2",
-                "Windows Server 2016", "Windows Server 2019", "Windows Server 2022", "Windows Server 2025"
+                {n: "NT 3.1 Server", i: "server"}, {n: "NT 4.0 Server", i: "server"}, {n: "Server 2003", i: "server"},
+                {n: "Server 2008 R2", i: "server"}, {n: "Server 2012 R2", i: "server"}, {n: "Server 2016", i: "server"},
+                {n: "Server 2019", i: "server"}, {n: "Server 2022", i: "server"}, {n: "Server 2025", i: "server"}
             ],
             special: [
-                "Windows XP Tablet", "Windows XP Media Center", "Windows RT", "Windows RT 8.1",
-                "Windows 10 IoT", "Windows 11 IoT", "Windows Holographic",
-                "Ubuntu 24.04 LTS", "Debian 12", "CentOS Stream 9", "Arch Linux", "Kali Linux"
+                {n: "Windows IoT", i: "win_new"}, {n: "Windows Holo", i: "win_new"}, {n: "Ubuntu 24.04", i: "linux"},
+                {n: "Debian 12", i: "linux"}, {n: "Arch Linux", i: "linux"}, {n: "Kali Linux", i: "linux"}
             ]
         };
 
-        let selectedOS = "Windows 11";
+        let selectedOS = "Windows 11 Pro";
 
         function showCategory(cat) {
-            // 更新 Tab 樣式
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if(event) event.currentTarget.classList.add('active');
 
             const grid = document.getElementById('os-grid');
             grid.innerHTML = '';
             
             osData[cat].forEach(os => {
                 const div = document.createElement('div');
-                div.className = `os-item ${os === selectedOS ? 'selected' : ''}`;
-                div.innerText = os;
+                div.className = `os-item ${os.n === selectedOS ? 'selected' : ''}`;
+                div.innerHTML = `${icons[os.i]} <span>${os.n}</span>`;
                 div.onclick = () => {
-                    selectedOS = os;
+                    selectedOS = os.n;
                     document.querySelectorAll('.os-item').forEach(i => i.classList.remove('selected'));
                     div.classList.add('selected');
                     update();
@@ -368,25 +388,21 @@
                 [MEMORY]   ${(ram/1024).toFixed(1)} GB<br>
                 [VRAM]     ${(gpu/1024).toFixed(1)} GB<br>
                 [DISK]     ${(disk/1024).toFixed(1)} GB<br>
-                [TIMESTAMP] ${new Date().toISOString().split('T')[0]}
+                [STAMP]    ${new Date().toLocaleDateString()}
             `;
         }
 
         function generateImage() {
             const area = document.getElementById('capture-area');
-            html2canvas(area, { 
-                backgroundColor: '#000',
-                scale: 2 
-            }).then(canvas => {
+            html2canvas(area, { backgroundColor: '#000', scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'MV-SERVER-SPEC-' + Date.now() + '.png';
+                link.download = 'MV-SPEC-' + Date.now() + '.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 document.getElementById('contactModal').style.display = 'flex';
             });
         }
 
-        // 初始化
         showCategory('client');
         update();
     </script>
